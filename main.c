@@ -12,51 +12,49 @@
 
 #include "fdf.h"
 
-
-t_point	*get_points(int x, int y, int x1, int y1)
+int	fdf_file(char *s)
 {
-	t_point		*lines;
-	lines = malloc(sizeof(t_point));
-	if (!lines)
-		return (0);
-	lines->x0 = x;
-	lines->y0 = y;
-	lines->x1 = x1;
-	lines->y1 = y1;
-			printf("\nx:%d,y:%d\n",lines->y0,lines->y1);
+	char	*str;
+	int		i;
+	int		j;
 
-	return (lines);
+	i = 0;
+	j = 0;
+	str = ".fdf";
+	while (s[i])
+	{
+		if (s[i++] == str[j])
+			j++;
+		if (j == 3)
+			return (0);
+	}
+	return (-1);
 }
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	t_map_data	*data;
-	t_data	img;
-    int	x;
-	int	y;
+	t_fdf_data	*data;
 
-	data = malloc(sizeof(t_map_data));
-	if (!data)
-		return (0);
-	data->zoom = 20;
-	data->mlx = mlx_init();
-	data->mlx_win = mlx_new_window(data->mlx, 800, 800, "Hello lina!");
-	img.img = mlx_new_image(data->mlx, 800, 800);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-	read_map("42.fdf", data, -1, 0);
-	y = 0;
-	while (y < data->height)
+	if (ac != 2 || (fdf_file(av[1]) == -1))
 	{
-		x = 0;
-		while(x < data->width)
-		{
-			// printf("\nx:%d,y:%d\n",x,y);
-			drawline(data, get_points(x, y, x + 1, y), &img);
-			drawline(data, get_points(0, 2, 10, 80), &img);
-			x++;
-		}
-		y++;
+		ft_putstr("\033[1;31m Invalid arguments!!\n");
+		ft_putstr("\033[0;34m The correct format is :<< ./fdf map_file.fdf>>");
+		exit(EXIT_FAILURE);
 	}
+	data = (t_fdf_data *)malloc(sizeof(t_fdf_data) * 1);
+	if (data == NULL)
+		ft_error();
+	if (read_map(av[1], data, -1, 0) == -1)
+	{
+		ft_putstr("\033[1;31m NON-Existing File!!\n");
+		ft_putstr("\033[0;34m The correct format is :<< ./fdf map_file.fdf>>");
+		exit(EXIT_FAILURE);
+	}
+	init_param(data);
+	draw(data);
+	mlx_hook(data->mlx_win, 2, 0, ft_keyboard, data);
+	mlx_key_hook(data->mlx_win, ft_keyboard, data);
+	mlx_hook(data->mlx_win, 4, 0, ft_mouse, data);
 	mlx_loop(data->mlx);
+	return (0);
 }

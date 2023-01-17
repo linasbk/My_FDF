@@ -42,10 +42,10 @@ char	*word_dup(char *s, char c, int *lenght)
 	char	*word;
 
 	i = *lenght;
-	while (s[i] == c)
+	while (s[i] == c && s[i])
 		i++;
 	k = i;
-	while (s[i] != c)
+	while (s[i] != c && s[i])
 		i++;
 	word = ft_substr(s, k, i - k);
 	*lenght = i;

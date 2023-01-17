@@ -12,6 +12,17 @@
 
 #include"fdf.h"
 
+void	ft_putstr(char *s)
+{
+	if (!s)
+		return ;
+	while (*s)
+	{
+		write(1, &(*s), 1);
+		s++;
+	}
+}
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;
@@ -91,14 +102,4 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	}
 	*(str + i) = '\0';
 	return (str);
-}
-
-size_t	ft_strlen(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Bresenhams.c                                       :+:      :+:    :+:   */
+/*   DDA.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsabik <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,63 +12,57 @@
 
 #include"fdf.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_fdf_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	dst = data->addr + (y * data->line_len + x * (data->bpp / 8));
 	*(unsigned int *)dst = color;
 }
 
-
-t_point	*ft_convert(t_point *lines)
+void	ft_convert(t_point *a, t_point *b)
 {
 	int	swap;
 
-	if (lines->x0 > lines->x1)
+	if (a->x > b->x)
 	{
-			swap = lines->x0;
-			lines->x0 = lines->x1;
-			lines->x1 = swap;
+			swap = a->x;
+			a->x = b->x;
+			b->x = swap;
 	}
-	if (lines->y0 > lines->y1)
+	if (a->y > b->y)
 	{
-			swap = lines->y0;
-			lines->y0 = lines->y1;
-			lines->y1 = swap;
+			swap = a->y;
+			a->y = b->y;
+			b->y = swap;
 	}
-	return (lines);
 }
 
-void	drawline(t_map_data *data, t_point *lines, t_data *img)
+void	drawline(t_fdf_data *data, t_point *a, t_point *b)
 {
-	double	pixelX;
-	double	pixelY;
-	int	    p;
-	// int		alt;
+	int	p;
+	int	color;
 
-	lines = ft_convert(lines);
-
-	lines->x1 *= data->zoom;
-	lines->x0 *= data->zoom;
-	lines->y1 *= data->zoom; 
-	lines->y0 *= data->zoom;
-
-
-	data->color = 0x00FF9005;
-	lines->delta_x = lines->x1 - lines->x0;
-	lines->delta_y = lines->y1 - lines->y0;
-	p = sqrt((lines->delta_x * lines->delta_x) + (lines->delta_y * lines->delta_y));
-	lines->delta_x /= p;
-	lines->delta_y /= p;
-	pixelX = lines->x0;
-	pixelY = lines->y0;
+	ft_convert(a, b);
+	color = 0;
+	a->z = data->map[(int)a->y][(int)a->x];
+	b->z = data->map[(int)b->y][(int)b->x];
+	color += get_color(a->z) + (data->color * 10);
+	zoom_iso(a, b, data);
+	a->delta_x = b->x - a->x;
+	a->delta_y = b->y - a->y;
+	p = sqrt((a->delta_x * a->delta_x) + (a->delta_y * a->delta_y));
+	a->delta_x /= p;
+	a->delta_y /= p;
 	while (p)
 	{
-		my_mlx_pixel_put(img, pixelX, pixelY, data->color);
-		pixelX += lines->delta_x;
-		pixelY += lines->delta_y;
-		--p;
+		if ((a->x > 0 && a->x < data->win_width) && (a->y > 0
+				&& a->y < data->win_height))
+			my_mlx_pixel_put(data, a->x, a->y, color);
+			a->x += a->delta_x;
+			a->y += a->delta_y;
+			--p;
 	}
-            mlx_put_image_to_window(data->mlx, data->mlx_win, img->img, 0, 0);
+	free(a);
+	free(b);
 }

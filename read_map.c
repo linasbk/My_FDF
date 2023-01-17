@@ -42,18 +42,18 @@ int	map_height(char *file)
 	return (line);
 }
 
-void	read_map(char *file, t_map_data *data, int i, int j)
+int	read_map(char *file, t_fdf_data *data, int i, int j)
 {
 	int		fd;
 	char	*str;
 
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		return (-1);
 	data->height = map_height(file);
 	data->map = malloc(data->height * sizeof(int *));
 	if (!data->map)
-		return ;
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		return ;
+		return (-1);
 	str = get_next_line(fd);
 	while (++i < data->height)
 	{
@@ -61,12 +61,12 @@ void	read_map(char *file, t_map_data *data, int i, int j)
 		data->width = get_num_word(str, ' ');
 		data->map[i] = malloc(sizeof(int) * data->width);
 		if (!data->map[i])
-			return ;
+			return (-1);
 		j = -1;
 		while (++j < data->width)
 			data->map[i][j] = ft_atoi(data->line[j]);
 		free_all(data->line, j, str);
 		str = get_next_line(fd);
 	}
-	close(fd);
+	return (close(fd), 0);
 }

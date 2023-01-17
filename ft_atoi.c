@@ -12,6 +12,16 @@
 
 #include"fdf.h"
 
+size_t	ft_strlen(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
 static int	ft_isspace(char str)
 {
 	if (str == '\t' || str == '\f' || str == '\v'
