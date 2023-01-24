@@ -1,0 +1,30 @@
+#include "mlx.h"
+#include<stdlib.h>
+#include<math.h>
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_data;
+int	main(void)
+{
+	void	  *mlx;
+	void	  *mlx_win;
+	mlx = mlx_init();
+	mlx_win = mlx_new_window(mlx, 600, 400, "luna");
+	for (int i = 0; i <= 100; i++)
+	{
+			for (int x = 0; x <= 100; x++)
+			{
+				if (i == 0 || i == 100)
+					mlx_pixel_put(mlx, mlx_win, i, x, 0x00FF0000);
+				else if (x == 0 || x == 100)
+					mlx_pixel_put(mlx, mlx_win, i, x, 0x0FFF1000);
+
+			}
+	}
+	mlx_loop(mlx);
+	return (0);
+}

@@ -1,0 +1,47 @@
+#include "mlx.h"
+#include<stdlib.h>
+#include<math.h>
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_data;
+
+int draw_line(void *mlx, void *win, int beginX, int beginY, int endX, int endY, int color)
+{
+	double	lines->delta_x;
+	double	lines->delta_y;
+	double	pixelX;
+	double	pixelY;
+	int			p;
+
+	lines->delta_y = endY - beginY;
+	lines->delta_x = endX - beginX;
+	p = sqrt((lines->delta_x * lines->delta_x) + (lines->delta_y * lines->delta_y));
+	lines->delta_x /= p;
+	lines->delta_y /= p;
+	pixelX = beginX;
+	pixelY = beginY;
+	while (p)
+	{
+		printf("%f,%f\n",pixelX,pixelY);
+			mlx_pixel_put(mlx, win, pixelX, pixelY, color);
+			pixelX += lines->delta_x;
+			pixelY += lines->delta_y;
+			--p;
+	}
+	return (0);
+}
+
+int	main(void)
+{
+	void	  *mlx;
+	void	  *mlx_win;
+	mlx = mlx_init();
+	mlx_win = mlx_new_window(mlx, 600, 400, "luna");
+	draw_line(mlx, mlx_win, 500, 300, 0, 0, 0xFFFFFF); 
+	mlx_loop(mlx);
+	return (0);
+}
