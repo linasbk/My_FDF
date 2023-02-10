@@ -1,4 +1,16 @@
-# FdF
+<h1 align="center">
+	📖 FDF
+</h1>
+
+<p align="center">
+	<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/linasbk/get_next_line?color=lightblue" />
+	<img alt="Number of lines of code" src="https://img.shields.io/tokei/lines/github/linasbk/get_next_line?color=critical" />
+	<img alt="Code language count" src="https://img.shields.io/github/languages/count/linasbk/get_next_line?color=yellow" />
+	<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/linasbk/get_next_line?color=blue" />
+	<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/linasbk/get_next_line?color=green" />
+</p>
+---
+
 ## About
 
 FdF is a project in which we convert a file with a grid of height values into a 3d wireframe using a simple graphics library called MiniLibX.
